@@ -1,16 +1,18 @@
-
 # OpenEdge Reference Architecture
 
 ## 1. Presentation Layers
+
 - Provides user interface.
 - Acts as Mediator between User and Business Service Layer.
 - Displays the data from business servicing layer and provides data updates to it.
 
 ## 2. Integration Layers
+
 - Provides Interface with other Applications.
 - Like Web services and Messaging.
 
 ## 3. Business Servicing Layers
+
 - Includes the business logic that deals with application data in its logical form.
 - Provides interfaces that manage general support services such as:
   - Performing data transformation.
@@ -18,12 +20,14 @@
   - Providing single-point of definition and interaction for all persistent application entities.
 
 ## 4. Data Access Layer
+
 - Part of the application that deals with physical data storage.
 - Code dealing with physical data storage is isolated in this layer.
 - Higher layers define a logical view of the data, ideal for business logic.
 - Changes in physical data storage require changes only in this layer.
 
 ## 5. Data Stores Layer
+
 - Physical location of application data.
 - Two types:
   - Managed Data Stores (OpenEdge databases or databases accessible through OpenEdge DataServers).
@@ -52,18 +56,18 @@
 
 # Data Types
 
-| Data Type | Description | Default Initial Value | Default Display Format |
-|:---|:---|:---|:---|
-| Integer | Whole numbers | 0 | General numeric format |
-| Int64 | 64-bit integer | 0 | General numeric format |
-| Character | Text string | `?` (Unknown) | `X(n)` where n is length |
-| Long | Deprecated (use Int64) | 0 | General numeric format |
-| Logical | Boolean (True/False) | FALSE | "yes/no" or "true/false" |
-| Decimal | Numbers with decimals | 0 | "->>,>>9.99" |
-| Date | Calendar date | `?` (Unknown) | "99/99/9999" |
-| Time | Time of day | 0 | "HH:MM:SS" |
-| Rowid | Record pointer | `?` (Unknown) | Not displayable |
-| Recid | Record id (4 bytes) | `?` (Unknown) | Not displayable |
+| Data Type | Description            | Default Initial Value | Default Display Format   |
+| :-------- | :--------------------- | :-------------------- | :----------------------- |
+| Integer   | Whole numbers          | 0                     | General numeric format   |
+| Int64     | 64-bit integer         | 0                     | General numeric format   |
+| Character | Text string            | `?` (Unknown)         | `X(n)` where n is length |
+| Long      | Deprecated (use Int64) | 0                     | General numeric format   |
+| Logical   | Boolean (True/False)   | FALSE                 | "yes/no" or "true/false" |
+| Decimal   | Numbers with decimals  | 0                     | "->>,>>9.99"             |
+| Date      | Calendar date          | `?` (Unknown)         | "99/99/9999"             |
+| Time      | Time of day            | 0                     | "HH:MM:SS"               |
+| Rowid     | Record pointer         | `?` (Unknown)         | Not displayable          |
+| Recid     | Record id (4 bytes)    | `?` (Unknown)         | Not displayable          |
 
 > **Note:** `?` represents an Unknown value in Progress 4GL.
 
@@ -71,23 +75,23 @@
 
 # Default Initial Values
 
-| Data Type | Default Initial Value |
-|:---|:---|
-| Character | `?` |
-| Date | `?` |
-| Datetime | `?` |
-| Datetime-tz | `?` |
-| Decimal | 0 |
-| Integer | 0 |
-| Int64 | 0 |
-| Logical | FALSE |
-| Raw | `?` |
-| Recid | `?` |
-| Rowid | `?` |
-| Handle | `?` |
-| Memptr | `?` |
-| CLOB | `?` |
-| BLOB | `?` |
+| Data Type   | Default Initial Value |
+| :---------- | :-------------------- |
+| Character   | `?`                   |
+| Date        | `?`                   |
+| Datetime    | `?`                   |
+| Datetime-tz | `?`                   |
+| Decimal     | 0                     |
+| Integer     | 0                     |
+| Int64       | 0                     |
+| Logical     | FALSE                 |
+| Raw         | `?`                   |
+| Recid       | `?`                   |
+| Rowid       | `?`                   |
+| Handle      | `?`                   |
+| Memptr      | `?`                   |
+| CLOB        | `?`                   |
+| BLOB        | `?`                   |
 
 ---
 
@@ -159,35 +163,43 @@ IF lIsActive = ? THEN
 # Display Format Examples
 
 ### 1. Integer Display Format
+
 ```progress
 DEFINE VARIABLE num AS INTEGER NO-UNDO.
 num = 123.
 DISPLAY num FORMAT "99999".
 ```
+
 - Output: `  123`
 
 ### 2. Decimal Display Format
+
 ```progress
 DEFINE VARIABLE price AS DECIMAL NO-UNDO.
 price = 123.456.
 DISPLAY price FORMAT "->>,>>9.99".
 ```
+
 - Output: `  123.46`
 
 ### 3. Date Display Format
+
 ```progress
 DEFINE VARIABLE today AS DATE NO-UNDO.
 today = TODAY.
 DISPLAY today FORMAT "99/99/9999".
 ```
+
 - Output (example): `04/27/2025`
 
 ### 4. Character Display Format
+
 ```progress
 DEFINE VARIABLE name AS CHARACTER NO-UNDO.
 name = "OpenEdge".
 DISPLAY name FORMAT "X(15)".
 ```
+
 - Output: `OpenEdge       ` (padded to 15 characters)
 
 ---
@@ -220,21 +232,25 @@ DISPLAY name FORMAT "X(15)".
 # Miscellaneous Notes
 
 ### Display Example
+
 ```progress
 DISPLAY "Hello World".
 ```
 
 ### Check Current Session Date Format
+
 ```progress
 DISP SESSION:DATE-FORMAT.
 ```
 
 ### Comments
+
 ```progress
 /* Single and multi-line comments */
 ```
 
 ### Variable Declaration
+
 ```progress
 DEFINE VARIABLE i AS INTEGER NO-UNDO.
 i = 5.
@@ -244,6 +260,7 @@ i = 10.
 > **NO-UNDO** is recommended to optimize memory usage.
 
 ### Variable Initialization
+
 ```progress
 DEFINE VARIABLE i AS INTEGER INITIAL 100 NO-UNDO.
 DISPLAY i.
@@ -256,11 +273,13 @@ DISPLAY i.
 ### MESSAGE Statements
 
 Syntax:
+
 ```progress
 MESSAGE "Your Message Here" VIEW-AS ALERT-BOX INFORMATION BUTTONS OK TITLE "Info".
 ```
 
 Options:
+
 - COLOR color-phrase
 - {expression | SKIP[(n)]} (blank lines)
 - VIEW-AS ALERT-BOX (MESSAGE, QUESTION, INFORMATION, ERROR, WARNING)
@@ -270,21 +289,22 @@ Options:
 - FORMAT (custom format)
 
 Description:
+
 - COLOR color-phrase : Displays a message using the color we specify with the COLOR phrase.
 - expression: An expression (a constant, field name, variable name or expression) whose value we want to display in the message area.
 - SKIP[(n)] : Indicates a number (n) of blank lines to insert into the message.
 - VIEW-AS ALERT-BOX [alert-type] : Specifies that the message is displayed in an alert box rather than in the window message area.
-    - MESSAGE
-    - QUESTION
-    - INFORMATION
-    - ERROR
-    - WARNING
-- BUTTONS button-set: Specifies what sets of buttons are available within the alert box. The possible button sets are as follows: 
-    - YES NO
-    - YES NO CANCEL
-    - OK
-    - OK-CANCEL
-    - RETRY-CANCEL
+  - MESSAGE
+  - QUESTION
+  - INFORMATION
+  - ERROR
+  - WARNING
+- BUTTONS button-set: Specifies what sets of buttons are available within the alert box. The possible button sets are as follows:
+  - YES NO
+  - YES NO CANCEL
+  - OK
+  - OK-CANCEL
+  - RETRY-CANCEL
 - TITLE title-string : Specifies a value to display in the title bar of the alert box.
 - SET field : Displays the expressions we specified and SETs the field or variable name
 - UPDATE field: Displays the expression we specified and update the field or variable we name.
@@ -296,7 +316,8 @@ Description:
 
 ### Local Variable Declarations
 
-Syntax: 
+Syntax:
+
 - DEFINE VARIABLE <variable-name> AS <Data-type> FORMAT <format-string> INITIAL <initial-value> NO-UNDO.
 
 ```
@@ -305,7 +326,8 @@ DEFINE VARIABLE iCustomerNumber AS INTEGER FORMAT 9999 INITIAL 10 NO-UNDO.
 
 ### New Shared Variable Declaration
 
-Syntax: 
+Syntax:
+
 - DEFINE NEW SHARED VARIABLE <variable-name> AS <dat-type> FORMAT <format-string> INITIAL <initial-value> NO-UNDO.
 
 ```
@@ -315,8 +337,58 @@ DEFINE NEW SHARED VARIABLE cCustimerName AS CHARACTER INITIAL "New-Shared".
 ### Shared Variable Declaration
 
 Syntax :
+
 - DEFINE SHARED VARIABLE <variable-name> AS <data-type> FORMAT <format-string> INITIAL <Initial-value> NO-UNDO.
 
 ```
 DEFINE SHARED VARIABLE cCustomerName AS CHARACTER INITIAL "shared".
 ```
+
+---
+
+- For a single line if we don't use '.' period it's fine but for multiple lines it does matter to end with Period
+- Syntax :
+
+```
+DEFINE VARIABLE variable_name AS data-type
+    [FORMAT format-type]
+    [INITIAL initial-value]
+    [NO-UNDO].
+```
+
+- DEFINE VARIABLE : declares a new variable.
+- AS data-type : Specifies the data type of the variable.(e.g., CHARACTER, INTEGER, DECIMAL, DATE, LOGICAL..)
+- FORMAT format-type (Optional) : Defines how the variable is displayed
+- INITIAL initial-value (Optional) : Sets a default value when the variable is created.
+- NO-UNDO (Optional but recommended) : Prevents the variable from being roll back in case of an error (improves performance).
+
+- EXAMPLE :
+
+```
+DEFINE VARIABLE orderDate AS DATE FORMAT 99/99/9999 INITIAL TODAY NO-UNDO.
+DISPLAY orderDate.
+
+output:
+04/28/2025
+
+DEFINE VARIABLE totalPrice AS INTEGER FORMAT "$>>>,>>9.99" INITIAL 1023.00 NO-UNDO.
+DISPLAY totalPrice.
+
+Output :
+ totalPrice
+-----------
+  $1,023.00
+
+```
+
+- When to Use FORMAT? 
+    - When displaying data in DISPLAY, MESSAGE, or reports.
+    ```
+    DEFINE VARIABLE phoneNumber AS CHARACTER FORMAT "XXX-XXX-XXXX" INITIAL "1234567890" NO-UNDO.
+    DISPLAY phoneNumber.
+
+    OUTPUT: 
+    phoneNumber
+    ------------
+    123-456-7890
+   ```
