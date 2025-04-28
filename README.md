@@ -392,3 +392,223 @@ Output :
     ------------
     123-456-7890
    ```
+- When to Use INITIAL? 
+    - When we want a default value instead of ? (unknown).
+    ```
+    DEFINE VARIABLE isActive AS LOGICAL INITIAL TRUE NO-UNDO.
+    DISPLAY isActive.
+
+    OUTPUT: 
+    isActive
+    --------
+      yes
+   ```
+- X OR x both are same bcz it is a case in-sensitive
+- X in a FORMAT string (like "X(20)") is a format symbol that represents "Any character (alphabetic, numeric, or special ).
+- Meaning of X(20) : 
+    - X is a Placeholder for any Single Character (letters, numbers, symbols).
+    - (20) is length of 20 characters.
+    - So, X(20) means: 
+        - The variable can display upto 20 characters of any type.
+        - If the actual value is shorter, It will be left-aligned and padded with spaces.
+```
+DEFINE VARIABLE productCode AS CHARACTER FORMAT "XX-999" NO-UNDO.
+productCode = "AB123".
+DISPLAY productCode.  // Shows: AB-123
+```
+---
+
+-PAUSE statement: used to temporarily halt program execution until the user takes an action (like pressing a key) or a specified time elapses.
+- Syntax: 
+    ```
+      PAUSE [ n | BEFORE-HIDE | MESSAGE message ].
+      n = number of seconds to pause (decimal allowed e.g., PAUSE 2.5. )
+      BEFORE-HIDE = Pauses before hiding a frame.
+      MESSAGE = displays custom message during pause.
+    ```
+- Pause for a Fixed Time
+    ```
+    MESSAGE "Processing...".
+    PAUSE 3.  /* Pauses for 3 seconds */
+    MESSAGE "Done!".
+    ```
+- Wait for User Input
+    ```
+    MESSAGE "Press any key to continue...".
+    PAUSE.  /* Waits indefinitely for a keypress */
+    ```
+- UI Control (BEFORE-HIDE)
+    ```
+    DISPLAY "Closing soon..." WITH FRAME f.
+    PAUSE BEFORE-HIDE.  /* Pauses before hiding the frame */
+    HIDE FRAME f.
+    ```
+- With Custom Message
+    ```
+    PAUSE MESSAGE "Loading data...".  /* Shows message during pause */
+    ```
+---
+
+### MESSAGE Statement
+- MESSAGE statement is used to display information to the user, typically in a pop-up dialog box or console output. It's commonly used for debugging, user prompts, and simple notifications.
+
+- Syntax:
+    ```
+    MESSAGE message-text 
+    [VIEW-AS ALERT-BOX | ALERT-BOX type] 
+    [SET field] 
+    [UPDATE field] 
+    [SKIP(n)] 
+    [COLOR color].
+
+    message-text = Text or variables to display.
+    VIEW-AS ALERT-BOX = Shows a pop-up dialog (GUI mode).
+    ALERT-BOX type = Specifies alert type (ERROR, WARNING, INFO, QUESTION, MESSAGE)
+    SET field = Assigns user input to a variable.
+    UPDATE field = Allows editing a variable.
+    SKIP(n) = Adds line breaks.
+    COLOR color = Sets text color (Console only).
+    ```
+* COMMON USE CASES
+    - Simple Message (console)
+      ```
+        MESSAGE "THIS IS A SIMPLE MESSAGE".
+      ```
+    - Alert-box 
+      ```
+        MESSAGE "File saved successfully!" VIEW-AS ALERT-BOX.
+      ```
+    - Alert with Type (Warning/Error/Question)
+    ```
+      MESSAGE "Overwrite file?" ALERT-BOX QUESTION.
+
+      /*
+      Supports : ERROR, WARNING, INFO, QUESTION
+      */
+    ```
+    - Multi-Line Messages
+    ```
+      MESSAGE "Line 1" SKIP "Line 2" SKIP(2) "Line 4".
+    /*
+      SKIP = single line break
+      SKIP(2) = Multiple line breaks
+    */
+    ```
+    - User Input (SET/UPDATE)
+    ```
+      DEFINE VARIABLE userName AS CHARACTER NO-UNDO.
+      MESSAGE "Enter your name:" SET userName.
+
+    ```
+    - Debugging Variables: displays variable values for debugging.
+    ```
+      DEFINE VARIABLE total AS INTEGER INITIAL 100.
+      MESSAGE "Total value:" total VIEW-AS ALERT-BOX.
+    ```
+
+    - Formatted Messages
+    ```
+      DEFINE VARIABLE price AS DECIMAL INITIAL 99.99.
+      MESSAGE "Price:" price FORMAT "$>>9.99" SKIP "Tax: 10%".
+    ```
+
+    - This will give us the error. Because, we cannot directly apply FORMAT within the MESSAGE Statement like we can in a DISPLAY statement.
+    ** NOTE ** : The FORMAT clause is meant for defining how a variable should be displayed when used with DISPLAY, not MESSAGE.
+
+    - Correct Approach 
+    ```
+      DEFINE VARIABLE price AS DECIMAL 
+      FORMAT "$>>9.99" 
+      INITIAL 99.99 
+      NO-UNDO.
+
+      MESSAGE "Price:" price SKIP "Tax: 10%".
+    ```
+
+    - Color in Console (Character Mode)
+    ```
+      MESSAGE "This is red text" COLOR RED.
+    ```
+---
+
+### DATE and the functions
+
+* Core Date functions
+- TODAY : Returns Current System Date.
+    ```
+      DEFINE VARIABLE currentDate AS DATE NO-UNDO.
+      currentDate = TODAY.
+      MESSAGE "Today's date : " currentDate VIEW-AS ALERT-BOX.
+    ```
+- DATE : Creates a date from month/date/year components or validate a date.
+    - Syntax: 
+        ```
+          DATE(month, day, year)  /* Construction */
+          DATE(stringDate)        /* Conversion */
+        ```
+    - EXAMPLE: 
+        ```
+          DEFINE VARIABLE newDate AS DATE NO-UNDO.
+          newDate = DATE(12, 25, 2023).  /* Christmas 2023 */
+
+          /* Validation : ERROR : Day in month is invalid.*/
+          IF DATE(2, 30, 2023) = ? THEN 
+          MESSAGE "Invalid date" VIEW-AS ALERT-BOX.
+        ```
+
+* Date Component Functions 
+- DAY : Extracts day of the month (1-31)
+    - Syntax : DAY(date)
+    ```
+      MESSAGE "Today is day" DAY(TODAY) "of the month".
+    ```
+- MONTH : Extracts month number (1-12)
+    - Syntax : MONTH(date)
+    ```
+      DEFINE VARIABLE monthNames AS CHARACTER EXTENT 12 INITIAL [
+      "January", "February", "March", "April", "May", "June",
+      "July", "August", "September", "October", "November", "December"
+      ].
+      MESSAGE "Current month:" monthNames[MONTH(TODAY)].
+    ```
+- YEAR : Extracts 4-digit year
+    - Syntax : YEAR(date)
+    ```
+      IF YEAR(TODAY) > 2020 THEN
+      MESSAGE "Post-2020 date".
+    ```
+- WEEKDAY : Returns Day name (Monday - Sunday)
+    - Syntax : WEEKDAY(date)
+    ```
+      MESSAGE "Today is" WEEKDAY(TODAY).
+    ```
+* Date Conversion Functions
+- ISO-DATE : Converts to ISO 8601 fromat (YYYY-MM-DD)
+    - Syntax: ISO-DATE(date)
+    ```
+      MESSAGE "ISO format:" ISO-DATE(TODAY).  /* "2023-11-15" */
+    ```
+- STRING : Custom date formatting.
+    - Syntax: STRING(date, "format")
+    ```
+    /*
+      Common Formats: 
+      "99/99/9999" -> "11/15/2023"
+      "99-99-9999" -> "11-15-2023"
+      "Month DD, YYYY" -> "November 15,2023"
+    */
+      MESSAGE "Formatted:" STRING(TODAY, "Month DD, YYYY").
+    ```
+* Date/Time Functions 
+    - NOW : current datetime (date + time).
+      - Syntax: NOW
+      ```
+        MESSAGE "Current datetime: " NOW.
+      ```
+    - MTIME : current datetime (date + time).
+      - Syntax: MTIME
+      ```
+        MESSAGE "Milliseconds today: " MTIME.
+      ```
+
+---
