@@ -418,7 +418,7 @@ DISPLAY productCode.  // Shows: AB-123
 ```
 ---
 
--PAUSE statement: used to temporarily halt program execution until the user takes an action (like pressing a key) or a specified time elapses.
+- PAUSE statement: used to temporarily halt program execution until the user takes an action (like pressing a key) or a specified time elapses.
 - Syntax: 
     ```
       PAUSE [ n | BEFORE-HIDE | MESSAGE message ].
@@ -612,3 +612,63 @@ DISPLAY productCode.  // Shows: AB-123
       ```
 
 ---
+* Shared Variables
+- What are Shared Variables?
+    - Shared Variables are global variables that can be accessed across: 
+        - Multiple Procedures (*.p files)
+        - Internal Procedures
+        - Functions
+        - Trigger blocks
+
+- When to use Shared Variables ?
+  - Use When
+    - we need to share data between different program files.
+    - Passing many parameters is cumbersome.
+    - we need persistent values across procedure calls.
+  - Avoid when
+    - Local variables can solve the problem.
+    - Thread safety is needed (use Parameters instead)
+    - we risk naming conflicts.
+
+- Types of Shared Varables
+    - SHARED Variables
+    - What?
+      - variables shared between specific procedures that explicitly declare them.
+      - Must be redefined identically in every procedure that uses them.
+    - When?
+      - When we need to share data between a few related procedures.
+      - When we want to control exactly which procedures can access the variable.
+    - Example: 
+    ```
+      /* --- main.p --- */
+      DEFINE SHARED VARIABLE svCustomerName AS CHARACTER NO-UNDO.
+      svCustomerName = "John Smith".
+
+      RUN helper.p.
+
+      /* --- helper.p --- */
+      DEFINE SHARED VARIABLE svCustomerName AS CHARACTER NO-UNDO. /* Must redeclare */
+      MESSAGE "Customer:" svCustomerName VIEW-AS ALERT-BOX. /* Shows "John Smith" */
+    ```
+    - NEW SHARED (GLOBAL) Variables
+    - What?
+      - Truly global variables available to all procedures after declaration.
+      - Only need to be defined once with NEW GLOBAL SHARED.
+    - When?
+      - For application-wide settings (like user ID, company code).
+      - When many procedures need access to the same value.
+    - Example: 
+    ```
+      /* --- config.p --- */
+      DEFINE NEW GLOBAL SHARED VARIABLE gvCompanyCode AS CHARACTER INITIAL "ACME" NO-UNDO.
+
+      /* --- report1.p --- */
+      /* No need to redeclare - automatically available */
+      MESSAGE "Company:" gvCompanyCode VIEW-AS ALERT-BOX. /* Shows "ACME" */
+
+      /* --- report2.p --- */
+      /* Also automatically available */
+      DISPLAY gvCompanyCode.
+    ```
+
+    
