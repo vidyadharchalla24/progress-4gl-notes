@@ -670,5 +670,194 @@ DISPLAY productCode.  // Shows: AB-123
       /* Also automatically available */
       DISPLAY gvCompanyCode.
     ```
+---
 
-    
+### Input and Output Parameters
+
+- Input Parameters (Passing Data into a Procedure)
+    - What? 
+      - Values passed into a Procedure
+      - Cannot be modified by the called Procedure.
+    - Syntax: 
+    ```
+      DEFINE INPUT PARAMETER paramName AS data-type NO-UNDO.
+    ```
+    - EXAMPLE :
+    ```
+      /* --- main.p --- */
+      DEFINE VARIABLE custID AS INTEGER INITIAL 1001 NO-UNDO.
+
+      RUN GetCustomerName.p (INPUT custID).
+
+      /* --- GetCustomerName.p --- */
+      DEFINE INPUT PARAMETER ipiCustID AS INTEGER NO-UNDO.
+
+      MESSAGE "Customer:" ipiCustID VIEW-AS ALERT-BOX.
+    ```
+- Output Parameters (Returning Data from a Procedure)
+    - What? 
+      - Values returned from a Procedure
+      - must be assigned a value inside the called Procedure.
+    - Syntax: 
+    ```
+      DEFINE OUTPUT PARAMETER paramName AS data-type NO-UNDO.
+    ```
+    - EXAMPLE :
+    ```
+      /* --- main.p --- */
+      DEFINE VARIABLE custName AS CHARACTER NO-UNDO.
+
+      RUN GetCustomerName.p (INPUT 1001, OUTPUT custName).
+
+      MESSAGE "Customer Name:" custName VIEW-AS ALERT-BOX.
+
+      /* --- GetCustomerName.p --- */
+      DEFINE INPUT  PARAMETER ipiCustID  AS INTEGER   NO-UNDO.
+      DEFINE OUTPUT PARAMETER opcCustName AS CHARACTER NO-UNDO.
+
+      opcCustName = "vidyadhar challa".
+      MESSAGE "Custid: " ipiCustID.
+    ```
+- INPUT-OUTPUT Parameters (Two-Way Communication)
+    - What? 
+      - Passes a Value in and  returns a modified value
+      - Acts as both input and output.
+    - Syntax: 
+    ```
+      DEFINE INPUT-OUTPUT PARAMETER paramName AS data-type NO-UNDO.
+    ```
+    - EXAMPLE :
+    ```
+      /* --- main.p --- */
+      DEFINE VARIABLE orderTotal AS DECIMAL INITIAL 100.00 NO-UNDO.
+
+      RUN ApplyDiscount.p (INPUT-OUTPUT orderTotal).
+
+      MESSAGE "Discounted Total:" orderTotal VIEW-AS ALERT-BOX.
+
+      /* --- ApplyDiscount.p --- */
+      DEFINE INPUT-OUTPUT PARAMETER iopdTotal AS DECIMAL NO-UNDO.
+
+      iopdTotal = iopdTotal * 0.9. /* Apply 10% discount */
+    ```
+---
+### Arrays
+- Arrays in progress (called extents) allow us to store multiple values of the same data type under a single variable name.
+- Declaration 
+  ```
+  DEFINE VARIABLE variableName AS data-type EXTENT array-size NO-UNDO.
+
+  DEFINE VARIABLE cCustomers AS CHARACTER EXTENT 10 NO-UNDO.
+
+  /*
+  ASSIGNMENT 
+  By index (1-based by default) 
+  */
+    cCustomers[1] = "John Smith".
+    cCustomers[2] = "Maria Garcia".
+
+  /* Initialize all values at once */
+  DEFINE VARIABLE iNumbers AS INTEGER EXTENT 3 INITIAL [10, 20, 30] NO-UNDO.
+
+  /* Dynamic Arrays (Unknown Size) */
+  DEFINE VARIABLE cDynamicArray AS CHARACTER EXTENT NO-UNDO.
+  DEFINE VARIABLE iArraySize AS INTEGER NO-UNDO.
+
+  /* Set size at runtime */
+  iArraySize = 5.
+  EXTENT(cDynamicArray) = iArraySize. 
+
+  cDynamicArray[1] = "First element".
+
+  /* Multi-Dimensional Arrays: Progress doesn't support true multi-dimensional arrays, but we can simulate them. */
+  DEFINE VARIABLE cGrid AS CHARACTER EXTENT 10 EXTENT 10 NO-UNDO. /* 10x10 grid */
+  cGrid[1][1] = "Top-left corner".
+
+  /* Get Array Size */
+  DEFINE VARIABLE iSize AS INTEGER NO-UNDO.
+  iSize = EXTENT(cCustomers).  /* Returns 10 for our first example */
+ 
+  /* Check if Array Element Exists */ 
+  IF cCustomers[5] <> ? THEN 
+   MESSAGE "Element 5 exists".
+  ```
+- Limitations: 
+    - All elements must be the same data type.
+    - Fixed sized arrays can't be resized after declaration.
+    - No built-in sort or search functions (code manually).
+- When to Use?
+    - Lists of similar items (Customer names, daily totals)
+    - Fixed size data sets (days of week, months)
+    - Temporary storage before database operations.
+- When to Avoid?
+    - Variable size data (use temp-tables instead).
+    - Complex relationships (use temp-tables or Objects).
+    - Large datasets (Memory Consumption).
+---
+### PROPATH
+- PROPATH is a environment variable that specifies the search path Progress uses to locate :
+    - Procedure files (.p , .w, .cls)
+    - Include files (.i)
+    - Class files (.r)
+    - Other reference files.
+- It works similar to PATH environment variable in Operating Sytems.
+- Key Uses of PROPATH
+    - Locating Program files when using RUN statements.
+    - Finding include files during compilation.
+    - Loading Class definitions in OOABL (Object-oriented ABL)
+    - Managing development vs deployment environments.
+- We can get current session PROPATH using : 
+```
+MESSAGE PROPATH.
+```
+#### Modifying PROPATH for a Single Session
+
+- Temporarily Add a Directory
+```
+  PROPATH = PROPATH + ",C:\my_new_directory".
+```
+
+- Prepend a Directory (Higher Priority)
+```
+  PROPATH = "C:\my_new_directory," + PROPATH.
+```
+---
+### Questions
+- What is a .p file and .r file?
+    - .p file (Source Code Files)
+      - Human readable source code file.
+      - contains original procedure code we write.
+      - must be compiled before execution.
+      - we need to use this during development
+      - when we need to modify code.
+    - .r files (Compiled Runtime Files)
+      - Compiled binary version of .p file.
+      - created when we compile a .p file.
+      - cannot be directly viewed or edited.
+      - Executes faster than .p file.
+      - Required for execution (after first compilation)
+      - Platform-Specific (must be re-compiled if moving between OS).
+
+- What are the files able to be generated using COMPILE statement?
+    - When COMPILE statement is run then it can generate following files: 
+        - .r : The compiled Runtime file  (main output).
+        - .lst : Listing file (If Listing option is used).
+        - .xref : Cross-reference file (If XREF option is used).
+        - .debug : Debug listing file (If DEBUG-LIST is used).
+        - .json : Metadata file (If JSON option is used in newer versions).
+
+- What are the files able to generate using COMPILE statement even .p file has error?
+    - If .p (procedure) file has errors, The COMPILE statement does not generate a .r file (compiled runtime file), but it can still generate certain diagnostic files, depending on the options used.
+    - Files that can still be generated even if the .p file has errors:
+        - .lst – Listing file 
+          - Contains the expanded source code and compiler messages.
+          - Generated if LISTING option is used.
+          - Useful for debugging and viewing preprocessor output.
+        - .xref – Cross-reference file
+          - Generated if XREF option is used.
+          - May be partially filled if compile fails early.
+        - .debug – Debug listing file
+          - Created if DEBUG-LIST option is used.
+          - May show partial debug info before the error occurred.
+        - .log – Optional compiler log file 
+          - If explicitly redirected or logged.
