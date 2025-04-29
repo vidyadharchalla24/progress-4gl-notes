@@ -921,11 +921,16 @@ MESSAGE PROPATH.
 | `COM-HANDLE`   | Reference to COM/OLE object (Windows)  | `?`            | Varies (Windows-specific feature)                           |
 
 - What are the differences among local variable, shared variable, Parameters?
-| Feature           | Local Variable                      | Shared Variable                        | Parameter                            |
-|-------------------|--------------------------------------|----------------------------------------|--------------------------------------|
-| **Scope**         | Only visible within the current procedure | Visible across procedures if declared as SHARED | Passed between procedures/functions  |
-| **Declaration**   | `DEFINE VARIABLE`                   | `DEFINE SHARED VARIABLE`              | `DEFINE PARAMETER` / `DEFINE INPUT/OUTPUT/INPUT-OUTPUT PARAMETER` |
-| **Purpose**       | Temporary storage for internal use  | Share data across multiple procedures | Pass values between caller and callee |
-| **Lifetime**      | Exists only during the procedure run | Exists as long as the program using it is active | Exists during the procedure call     |
-| **Modifiability** | Only within the procedure           | Any procedure using it can modify     | Can be read/write based on mode      |
-| **Default Behavior** | Not accessible outside the procedure | Must be declared SHARED in both producer and consumer | Access defined by parameter mode (INPUT, OUTPUT, etc.) |
+  ### Comparison: Local Variable vs Shared Variable vs Parameter
+
+```markdown
+| Feature             | Local Variable                          | Shared Variable                          | Parameter                                    |
+|---------------------|------------------------------------------|------------------------------------------|----------------------------------------------|
+| **Scope**           | Only visible within the current procedure | Visible across procedures if declared SHARED | Passed between procedures/functions          |
+| **Declaration**     | `DEFINE VARIABLE`                         | `DEFINE SHARED VARIABLE`                  | `DEFINE PARAMETER` / `DEFINE INPUT/OUTPUT/INPUT-OUTPUT PARAMETER` |
+| **Purpose**         | Temporary storage for internal use        | Share data across multiple procedures     | Pass values between caller and callee         |
+| **Lifetime**        | Exists only during the procedure run      | Exists as long as the program is active   | Exists during the procedure call             |
+| **Modifiability**   | Only within the procedure                 | Any procedure using it can modify         | Can be read/write based on mode               |
+| **Default Behavior**| Not accessible outside the procedure      | Must be declared SHARED in both producer and consumer | Access defined by parameter mode (INPUT, OUTPUT, etc.) |
+```
+
