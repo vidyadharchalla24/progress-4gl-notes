@@ -931,6 +931,58 @@ MESSAGE PROPATH.
 | **Purpose**         | Temporary storage for internal use        | Share data across multiple procedures     | Pass values between caller and callee         |
 | **Lifetime**        | Exists only during the procedure run      | Exists as long as the program is active   | Exists during the procedure call             |
 | **Modifiability**   | Only within the procedure                 | Any procedure using it can modify         | Can be read/write based on mode               |
-| **Default Behavior**| Not accessible outside the procedure      | Must be declared SHARED in both producer and consumer | Access defined by parameter mode (INPUT, OUTPUT, etc.) |
+| **Default Behavior** | Not accessible outside the procedure      | Must be declared SHARED in both producer and consumer | Access defined by parameter mode (INPUT, OUTPUT, etc.) |
 ```
 
+- Difference between RECID and ROWID?
+### Difference Between `RECID` and `ROWID` in Progress 4GL
+
+| Feature          | RECID                                          | ROWID                                                  |
+|------------------|------------------------------------------------|--------------------------------------------------------|
+| **Definition**   | Unique record identifier assigned by Progress  | Unique record identifier used by the database          |
+| **Portability**  | Not portable across databases                  | Portable across databases                              |
+| **Uniqueness**   | Unique only within a single table              | Globally unique across all tables                      |
+| **Use Case**     | Mainly used in ABL for quick access to records | Used for referencing records across databases          |
+| **Data Type**    | Integer                                        | ROWID data type (binary value)                         |
+| **Supported In** | Mostly Progress DBs                            | Also compatible with external databases (e.g., Oracle) |
+| **Performance**  | Very fast access to records                    | Slightly less efficient than RECID                     |
+
+> ⚠️ Note: `ROWID` is more modern and recommended for database interoperability, while `RECID` is legacy and specific to Progress databases.
+
+- What sets of buttons are available within the alert box?
+```
+| Button Set Constant          | Description                                   |
+|------------------------------|-----------------------------------------------|
+| `BUTTONS OK`                 | Displays only an **OK** button                |
+| `BUTTONS OK-CANCEL`          | Displays **OK** and **Cancel**                |
+| `BUTTONS YES-NO`             | Displays **Yes** and **No**                   |
+| `BUTTONS YES-NO-CANCEL`      | Displays **Yes**, **No**, and **Cancel**      |
+| `BUTTONS RETRY-CANCEL`       | Displays **Retry** and **Cancel**             |
+| `BUTTONS ABORT-RETRY-IGNORE` | Displays **Abort**, **Retry**, and **Ignore** |
+```
+
+- How do you declare array variable and explain the data types that array can support?
+    - We can declare an array variable using the EXTENT keyword, which specifies the number of elements in the array.
+    - Syntax: 
+    ```
+      DEFINE VARIABLE array-name AS data-type EXTENT n.
+
+      -> array-name: Name of the array variable
+      -> data-type: any valid ABL (Advanced Business Language) datatype.
+      -> n : number of elements in the array.
+    ```
+    - Example :
+    ```
+    DEFINE VARIABLE scores AS INTEGER EXTENT 3.
+    scores[1] = 85.
+    scores[2] = 90.
+    scores[3] = 78.
+    ```
+    - Datatypes that Arrays can support are: 
+        - INTEGER
+        - DECIMAL
+        - CHARACTER
+        - DATE
+        - LOGICAL
+        - INT64
+---
