@@ -950,7 +950,7 @@ MESSAGE PROPATH.
 > ⚠️ Note: `ROWID` is more modern and recommended for database interoperability, while `RECID` is legacy and specific to Progress databases.
 
 - What sets of buttons are available within the alert box?
-```
+
 | Button Set Constant          | Description                                   |
 |------------------------------|-----------------------------------------------|
 | `BUTTONS OK`                 | Displays only an **OK** button                |
@@ -959,7 +959,7 @@ MESSAGE PROPATH.
 | `BUTTONS YES-NO-CANCEL`      | Displays **Yes**, **No**, and **Cancel**      |
 | `BUTTONS RETRY-CANCEL`       | Displays **Retry** and **Cancel**             |
 | `BUTTONS ABORT-RETRY-IGNORE` | Displays **Abort**, **Retry**, and **Ignore** |
-```
+
 
 - How do you declare array variable and explain the data types that array can support?
     - We can declare an array variable using the EXTENT keyword, which specifies the number of elements in the array.
