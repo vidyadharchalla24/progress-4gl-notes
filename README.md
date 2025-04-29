@@ -861,3 +861,71 @@ MESSAGE PROPATH.
           - May show partial debug info before the error occurred.
         - .log – Optional compiler log file 
           - If explicitly redirected or logged.
+
+- What is advantage of .r file?
+    - .r files are compiled version of .p files, advantages are :
+      - Faster execution (no need for runtime compilation).
+      - Protects source code(as they're compiled).
+      - Smaller file Size compared to Source
+      - Better Performance for frequently used procedures.
+
+- How to add a Path to Propath permanently?
+  - Using Command line SET PROPATH "c:\newPathDirectory".
+
+- Which will be executed first both .p and .r file in same directory?
+  - .r file will be executed.
+  - Lets also see different situations also: 
+  ```
+    | Situation                     |                  What Happens                          |
+    |-------------------------------|--------------------------------------------------------|
+    | `.r` exists and is up-to-date | `.r` is executed                                       |
+    | `.p` is newer than `.r`       | `.p` is recompiled, new `.r` is generated, and executed|
+    | `.r` is missing               | `.p` is compiled and executed (if no errors)           |
+  ```
+
+- Create a Program say a.p which have output message "Hi". Compile and generate .r file. Then modify the a.p to prompt different output message. Execute the a.p in another procedure using RUN command. Verify what the output is and suggest a reason?
+    - First lets create an a.p and initialize a message.
+    ```
+    MESSAGE "HI" VIEW-AS ALERT-BOX.
+    ```
+    - compile a.p -> this command will generate a.r file in same directory.
+    - Let us modify the message of a.p 
+    ```
+    MESSAGE "HI, THERE WELCOME TO PROGRESS 4GL" VIEW-AS ALERT-BOX.
+    ```
+    - We don't compile this again. a.r file contains still old version ("HI")
+    - Lets create another procedure called "caller.p" 
+    ```
+      RUN a.p.
+    ```
+    - When we run this caller.p : RUN caller.p then we get output as "HI", because even though we have changed the text in a.p, the system still executes the compiled .r file, not the modified .p file. As we did not compile again the changed file. When we recompile a.p and try to run Caller.p again then we will be able to see output : HI, THERE WELCOME TO PROGRESS 4GL.
+
+- Explain the datatypes available in progress its default value and maximum limit?
+  - Progress 4GL (ABL) Data Types
+
+| Data Type      | Description                            | Default Value | Maximum Limit / Range                                       |
+|----------------|----------------------------------------|----------------|-------------------------------------------------------------|
+| `CHARACTER`    | String or text                         | `""`           | 32,000 characters                                           |
+| `INTEGER`      | 32-bit signed integer                  | `0`            | -2,147,483,648 to 2,147,483,647                             |
+| `INT64`        | 64-bit signed integer                  | `0`            | ±9,223,372,036,854,775,807                                  |
+| `DECIMAL`      | Precise decimal numbers                | `0`            | Up to 50 digits, default 10 decimal places                  |
+| `DATE`         | Date only                              | `?`            | 0001-01-01 to 9999-12-31                                    |
+| `DATETIME`     | Date with time                         | `?`            | Same as DATE + time (millisecond precision)                |
+| `DATETIME-TZ`  | Date with time and timezone info       | `?`            | Same as DATETIME + timezone offset                         |
+| `LOGICAL`      | Boolean value                          | `FALSE`        | `TRUE`, `FALSE`, `?` (unknown)                              |
+| `RECID`        | Record identifier                      | `?`            | Unique per record (not portable)                           |
+| `RAW`          | Binary data                            | `?`            | 32,000 bytes                                                |
+| `BLOB`         | Large Binary Object                    | `?`            | Up to 2 GB (database-dependent)                             |
+| `CLOB`         | Large Character Object                 | `?`            | Up to 2 GB (database-dependent)                             |
+| `HANDLE`       | Reference to runtime ABL object        | `?`            | Varies (used for dynamic buffers, queries, etc.)            |
+| `COM-HANDLE`   | Reference to COM/OLE object (Windows)  | `?`            | Varies (Windows-specific feature)                           |
+
+- What are the differences among local variable, shared variable, Parameters?
+| Feature           | Local Variable                      | Shared Variable                        | Parameter                            |
+|-------------------|--------------------------------------|----------------------------------------|--------------------------------------|
+| **Scope**         | Only visible within the current procedure | Visible across procedures if declared as SHARED | Passed between procedures/functions  |
+| **Declaration**   | `DEFINE VARIABLE`                   | `DEFINE SHARED VARIABLE`              | `DEFINE PARAMETER` / `DEFINE INPUT/OUTPUT/INPUT-OUTPUT PARAMETER` |
+| **Purpose**       | Temporary storage for internal use  | Share data across multiple procedures | Pass values between caller and callee |
+| **Lifetime**      | Exists only during the procedure run | Exists as long as the program using it is active | Exists during the procedure call     |
+| **Modifiability** | Only within the procedure           | Any procedure using it can modify     | Can be read/write based on mode      |
+| **Default Behavior** | Not accessible outside the procedure | Must be declared SHARED in both producer and consumer | Access defined by parameter mode (INPUT, OUTPUT, etc.) |
