@@ -43,7 +43,7 @@
 4. Progress 4GL: A fourth-generation programming language.
 5. Statement terminator: '.' (period) instead of ';' as in Java.
 6. Progress DB supports some SQL commands.
-7. Progress Compiler generates platform-independent '.r' files.
+7. Progress Compiler generates platform '.r' files.
 8. Multiple file types:
    - `.p`: Procedure files.
    - `.i`: Include files.
@@ -875,13 +875,11 @@ MESSAGE PROPATH.
 - Which will be executed first both .p and .r file in same directory?
   - .r file will be executed.
   - Lets also see different situations also: 
-  ```
     | Situation                     |                  What Happens                          |
     |-------------------------------|--------------------------------------------------------|
     | `.r` exists and is up-to-date | `.r` is executed                                       |
     | `.p` is newer than `.r`       | `.p` is recompiled, new `.r` is generated, and executed|
     | `.r` is missing               | `.p` is compiled and executed (if no errors)           |
-  ```
 
 - Create a Program say a.p which have output message "Hi". Compile and generate .r file. Then modify the a.p to prompt different output message. Execute the a.p in another procedure using RUN command. Verify what the output is and suggest a reason?
     - First lets create an a.p and initialize a message.
@@ -923,7 +921,7 @@ MESSAGE PROPATH.
 - What are the differences among local variable, shared variable, Parameters?
   ### Comparison: Local Variable vs Shared Variable vs Parameter
 
-```markdown
+
 | Feature             | Local Variable                          | Shared Variable                          | Parameter                                    |
 |---------------------|------------------------------------------|------------------------------------------|----------------------------------------------|
 | **Scope**           | Only visible within the current procedure | Visible across procedures if declared SHARED | Passed between procedures/functions          |
@@ -932,7 +930,7 @@ MESSAGE PROPATH.
 | **Lifetime**        | Exists only during the procedure run      | Exists as long as the program is active   | Exists during the procedure call             |
 | **Modifiability**   | Only within the procedure                 | Any procedure using it can modify         | Can be read/write based on mode               |
 | **Default Behavior** | Not accessible outside the procedure      | Must be declared SHARED in both producer and consumer | Access defined by parameter mode (INPUT, OUTPUT, etc.) |
-```
+
 
 - Difference between RECID and ROWID?
 ### Difference Between `RECID` and `ROWID` in Progress 4GL
