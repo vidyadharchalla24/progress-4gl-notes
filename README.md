@@ -984,3 +984,24 @@ MESSAGE PROPATH.
         - LOGICAL
         - INT64
 ---
+- Why can't we use frame with message statement?
+  - MESSAGE is a model dialog box which is handled outside of the standard UI frames.It is a window object not tied to or controlled by a frame object.
+  - FRAME is used to organize fields, labels, and output in a block of UI.
+  - ALERT-BOX is a System-level pop-up.
+  ```
+  /* ERROR */
+  MESSAGE "Processing.."
+  MESSAGE "Closing Soon..." VIEW-AS ALERT-BOX MESSAGE TITLE "Message" WITH FRAME f.
+  PAUSE 2 BEFORE-HIDE.
+  HIDE FRAME f.
+  PAUSE 3 MESSAGE "Loading data.."
+  DISPLAY "Back again!" WITH FRAME f.
+
+  /*correct */
+  MESSAGE "Processing.."
+  DISPLAY "Closing Soon..." WITH FRAME f.
+  PAUSE 2 BEFORE-HIDE.
+  HIDE FRAME f.
+  PAUSE 3 MESSAGE "Loading data.."
+  DISPLAY "Back again!" WITH FRAME f.
+  ```
