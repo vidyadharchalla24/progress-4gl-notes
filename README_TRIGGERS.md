@@ -509,3 +509,11 @@ END.
 ENABLE custId WITH FRAME fcust.
 WAIT-FOR 'CLOSE' OF THIS-PROCEDURE.
 ```
+---
+### Questions
+1. How to trace out the table "Employee" belongs to "DB1" Database programmatically?
+```
+MESSAGE LDBNAME(BUFFER Employee) VIEW-AS ALERT-BOX.
+```
+- **LDBNAME()** : it returns the logical name of the database.
+- **BUFFER Employee** : Buffer is used to refer to a buffer associated with a database table. Here, it's refering to the buffer for the "Employee" table. The "Employee" table must be a table that is defined in our Progress database schema. when we work with database records in progress 4GL, we often work with themm through buffers.

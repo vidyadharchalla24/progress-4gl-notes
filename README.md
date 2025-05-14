@@ -638,10 +638,11 @@ DISPLAY productCode.  // Shows: AB-123
     - When?
       - When we need to share data between a few related procedures.
       - When we want to control exactly which procedures can access the variable.
+- For regular shared variables, the  first time we declare a shared variable in the calling procedure, we use the **NEW** keyword along with the **SHARED**. Subsequent procedures that want to access the same variable use only SHARED.
     - Example: 
     ```
       /* --- main.p --- */
-      DEFINE SHARED VARIABLE svCustomerName AS CHARACTER NO-UNDO.
+      DEFINE NEW SHARED VARIABLE svCustomerName AS CHARACTER NO-UNDO.
       svCustomerName = "John Smith".
 
       RUN helper.p.
